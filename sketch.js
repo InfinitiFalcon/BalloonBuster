@@ -1,5 +1,8 @@
-var bow , arrow,  background;
+var bow , arrow,  scene;
 var bowImage, arrowImage, green_balloonImage, red_balloonImage, pink_balloonImage ,blue_balloonImage, backgroundImage;
+var arrowG, pinkB, redB, greenB, blueB;
+
+var score=0;
 
 function preload(){
   
@@ -7,9 +10,9 @@ function preload(){
   arrowImage = loadImage("arrow0.png");
   bowImage = loadImage("bow0.png");
   red_balloonImage = loadImage("red_balloon0.png");
-  green_balloonImage = loadImage("green_balloon0.png")
-  pink_balloonImage = loadImage("pink_balloon0.png")
-  blue_balloonImage = loadImage("blue_balloon0.png")
+  green_balloonImage = loadImage("green_balloon0.png");
+  pink_balloonImage = loadImage("pink_balloon0.png");
+  blue_balloonImage = loadImage("blue_balloon0.png");
   
 }
 
@@ -27,9 +30,14 @@ function setup() {
   bow = createSprite(380,220,20,50);
   bow.addImage(bowImage); 
   bow.scale = 1;
-  
+  arrowG = new Group()
+  redB = new Group()
+  greenB = new Group()
+  blueB = new Group()
+  pinkB = new Group()
+  score = 0    
 }
-score = 0
+
 function draw() {
  background(0);
   // moving ground
@@ -47,28 +55,43 @@ function draw() {
     createArrow();
     
   }
-  
-  
-  //creating continous balloons
-  var select_balloon = Math.round(random(1,1));
+   
+  //creating continous enemies
+  var select_balloon = Math.round(random(1,4));
   
   if (World.frameCount % 100 == 0) {
     if (select_balloon == 1) {
       redBalloon();
+    } else if (select_balloon == 2) {
+      greenBalloon();
+    } else if (select_balloon == 3) {
+      blueBalloon();
+    } else {
+      pinkBalloon();
     }
-    else if (select_balloon == 2) {
-      greenBalloon()
-    }
-    else if (select_balloon == 3) {
-      blueBalloon()
-    }
-    else {
-      pinkBalloon()
-    }
+  }  
+  if (arrowG.isTouching(redB)){
+    arrowG.destroyEach()
+    redB.destroyEach()
+    score += 1
   }
-  
+  if (arrowG.isTouching(blueB)){
+    arrowG.destroyEach()
+    blueB.destroyEach()
+    score += 3
+  }
+  if (arrowG.isTouching(greenB)){
+    arrowG.destroyEach()
+    greenB.destroyEach()
+    score += 2
+  }
+  if (arrowG.isTouching(pinkB)){
+    arrowG.destroyEach()
+    pinkB.destroyEach()
+    score += 4
+  }
   drawSprites();
-  text("Score:" + score, 270, 30)
+  text("Score: "+ score, 300,50);
 }
 
 
@@ -78,41 +101,45 @@ function draw() {
   arrow.addImage(arrowImage);
   arrow.x = 360;
   arrow.y=bow.y;
-  arrow.velocityX = -4;
+  arrow.velocityX = -3;
   arrow.lifetime = 100;
   arrow.scale = 0.3;
+  
+  arrowG.add(arrow)
 }
-
 
 function redBalloon() {
   var red = createSprite(0,Math.round(random(20, 370)), 10, 10);
   red.addImage(red_balloonImage);
-  red.velocityX = 3;
+  red.velocityX = 5;
   red.lifetime = 150;
   red.scale = 0.1;
-
+  redB.add(red)
 }
 
 function blueBalloon() {
   var blue = createSprite(0,Math.round(random(20, 370)), 10, 10);
   blue.addImage(blue_balloonImage);
-  blue.velocityX = 3;
+  blue.velocityX = 5;
   blue.lifetime = 150;
   blue.scale = 0.1;
+  blueB.add(blue)
 }
 
 function greenBalloon() {
   var green = createSprite(0,Math.round(random(20, 370)), 10, 10);
   green.addImage(green_balloonImage);
-  green.velocityX = 3;
+  green.velocityX = 5;
   green.lifetime = 150;
   green.scale = 0.1;
+  greenB.add(green)
 }
 
 function pinkBalloon() {
   var pink = createSprite(0,Math.round(random(20, 370)), 10, 10);
   pink.addImage(pink_balloonImage);
-  pink.velocityX = 3;
+  pink.velocityX = 5;
   pink.lifetime = 150;
-  pink.scale = 0.1;
+  pink.scale = 1
+  pinkB.add(pink)
 }
